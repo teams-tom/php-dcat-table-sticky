@@ -2,8 +2,6 @@
 
 namespace TeamsTom\TableSticky;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Dcat\Admin\Extend\ServiceProvider as BaseServiceProvider;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
@@ -11,9 +9,11 @@ use Dcat\Admin\Traits\HasFormResponse;
 
 class ServiceProvider extends BaseServiceProvider
 {
-    public function init()
-    {
-        parent::init();
+    use HasFormResponse;
+
+	public function init()
+	{
+		parent::init();
 
         Admin::booting(function () {
             $loginPath = admin_base_path('auth/login') ;
@@ -89,10 +89,10 @@ class ServiceProvider extends BaseServiceProvider
             }
         });
 
-    }
+	}
 
-    public function settingForm()
-    {
-        return new Setting($this);
-    }
+	public function settingForm()
+	{
+		return new Setting($this);
+	}
 }

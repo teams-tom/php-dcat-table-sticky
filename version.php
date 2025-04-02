@@ -2,9 +2,9 @@
 
 return [
     '1.0.0' => [
-        'Initialize extension.',
+        'table表头固定在顶部',
     ],
     '1.0.1' => [
-        'Initialize extension.',
-    ],
+        '修复无法获取dom'
+    ]
 ];

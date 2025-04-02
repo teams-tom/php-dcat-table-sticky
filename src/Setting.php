@@ -35,7 +35,7 @@ class Setting extends Form
      */
     public function form()
     {
-        $this->radio('auto_refresh', $this->trans('captcha.open_header_sticky'))
+        $this->radio('table_header', $this->trans('captcha.open_header_sticky'))
             ->options([
                 'open' => $this->trans('captcha.open'),
                 'close' => $this->trans('captcha.close'),
