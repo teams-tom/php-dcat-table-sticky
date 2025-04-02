@@ -75,7 +75,7 @@ class ServiceProvider extends BaseServiceProvider
                                 Array.from(child.children).forEach(children => {
                                     // 修改容器高度
                                     children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - NavTabsParent.offsetHeight + "px";
-                                }
+                                })
                             }
 
                         })
