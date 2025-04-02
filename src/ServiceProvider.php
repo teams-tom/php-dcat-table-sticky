@@ -27,9 +27,10 @@ class ServiceProvider extends BaseServiceProvider
                 $script = '
                 ;(function() {
                     tableDom = document.querySelector("table");
-                    console.log(tableDom,1111);
                     if(tableDom){
                         // 禁止html根结点纵向滚动
+                  console.log(document.documentElement,1111);
+                  console.log(document.documentElement.style,2222);
                         document.documentElement.style.overflowY = "hidden"
                         // 禁止body纵向滚动
                         document.body.style.height = "100%"
