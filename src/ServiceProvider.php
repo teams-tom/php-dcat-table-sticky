@@ -11,9 +11,9 @@ use Dcat\Admin\Traits\HasFormResponse;
 
 class ServiceProvider extends BaseServiceProvider
 {
-	public function init()
-	{
-		parent::init();
+    public function init()
+    {
+        parent::init();
 
         Admin::booting(function () {
             $loginPath = admin_base_path('auth/login') ;
@@ -27,6 +27,7 @@ class ServiceProvider extends BaseServiceProvider
                 $script = '
                 ;(function() {
                     tableDom = document.querySelector("table");
+                    console.log(tableDom,1111);
                     if(tableDom){
                         // 禁止html根结点纵向滚动
                         document.documentElement.style.overflowY = "hidden"
@@ -88,10 +89,10 @@ class ServiceProvider extends BaseServiceProvider
             }
         });
 
-	}
+    }
 
-	public function settingForm()
-	{
-		return new Setting($this);
-	}
+    public function settingForm()
+    {
+        return new Setting($this);
+    }
 }
