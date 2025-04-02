@@ -1,0 +1,34 @@
+{
+    "name": "teamstom/table-sticky",
+    "alias": "固定表格头/列",
+    "description": "Dcat-admin table sticky. / Dcat-admin 固定表格头/列。",
+
+    "type": "library",
+    "keywords": ["dcat-admin", "extension", "teams-tom", "table-sticky"],
+    "homepage": "https://github.com/dcat-admin/php-dcat-table-sticky",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "teams-tom",
+            "email": "tomu9bfg@derdk.onmicrosoft.com",
+            "homepage": "https://github.com/teams-tom"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5",
+        "dcat/laravel-admin": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TeamsTom\\TableSticky\\": "src/"
+        }
+    },
+    "extra": {
+        "dcat-admin": "TeamsTom\\TableSticky\\ServiceProvider",
+        "laravel": {
+            "providers": [
+                "TeamsTom\\TableSticky\\ServiceProvider"
+            ]
+        }
+    }
+}
