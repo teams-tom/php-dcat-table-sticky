@@ -7,6 +7,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasFormResponse;
 
+
 class ServiceProvider extends BaseServiceProvider
 {
     use HasFormResponse;
@@ -16,6 +17,8 @@ class ServiceProvider extends BaseServiceProvider
         parent::init();
 
         Admin::booting(function () {
+            $table_header = static::setting('table_header') ?: 'open';
+
             $loginPath = admin_base_path('auth/login') ;
             $loginPath = ($loginPath !== '/') ? trim ($loginPath,'/' ) : $loginPath;
             // 判断是否非登录页
@@ -26,8 +29,7 @@ class ServiceProvider extends BaseServiceProvider
                 // 示例：在非登录页注入脚本
                 $script = '
                 ;(function() {
-                    tableDom = document.querySelector("table");
-                    if(tableDom){
+                    if(document.getElementsByTagName("table").length){
                         // 禁止html根结点纵向滚动
                         document.documentElement.style.overflowY = "hidden"
                         // 禁止body纵向滚动
@@ -66,7 +68,7 @@ class ServiceProvider extends BaseServiceProvider
                         ContentBody.style.flex = "1";
 
 
-                        const ContentBodyRow = document.querySelectorAll(".row")
+                        const ContentBodyRow = document.querySelectorAll(".content-body .row")
                         Array.from(ContentBodyRow).forEach(child => {
                             child.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight + "px";
                             // 处理表格上有nav的情况
@@ -74,7 +76,7 @@ class ServiceProvider extends BaseServiceProvider
                             if(NavTabs){
                                 Array.from(child.children).forEach(children => {
                                     // 修改容器高度
-                                    children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - NavTabs.offsetHeight + "px";
+                                    children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - NavTabs.offsetHeight -20 + "px";
                                 })
                             }
 
@@ -86,12 +88,14 @@ class ServiceProvider extends BaseServiceProvider
                             DcatBox.style.height = "100%";
                             DcatBox.style.display = "flex";
                             DcatBox.style.flexDirection = "column";
+                            let scrollElement = null
                             Array.from(DcatBox.children).forEach(child => {
                                 if(!child.className.includes("modal")){
                                     // 检查子元素及其后代是否包含表格
                                     if(child.className.includes("table-wrapper")) {
                                         child.style.flex = "1";
                                         child.style.overflowY = "auto";
+                                        scrollElement = child
                                     }else{
                                         if(!child.className.includes("hidden")){
                                             // 添加flex约束
@@ -102,6 +106,29 @@ class ServiceProvider extends BaseServiceProvider
                                     }
                                 }
                             });
+
+                            // 获取table元素
+                            const table = document.querySelector(".dcat-box .table")
+                            if(table){
+                                // 表头
+                                const theadElement = document.getElementsByTagName("thead")[0]
+                                // console.log('.$table_header.')
+                                theadElement.style.position = "sticky";
+                                theadElement.style.top = "0";
+                                theadElement.style.zIndex = "99";
+
+                                const handleScroll = function(e) {
+                                    if (e.target.scrollTop > 0) {
+                                        theadElement.style.background = "#fff";
+                                    } else {
+                                        theadElement.style.background = "";
+                                    }
+                                };
+                                // 移除旧的事件监听器
+                                scrollElement.removeEventListener("scroll", handleScroll);
+                                // 添加新的事件监听器
+                                scrollElement.addEventListener("scroll", handleScroll);
+                            }
                         }
                     }
                 })();
