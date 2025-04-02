@@ -74,7 +74,7 @@ class ServiceProvider extends BaseServiceProvider
                             if(NavTabs){
                                 Array.from(child.children).forEach(children => {
                                     // 修改容器高度
-                                    children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - NavTabsParent.offsetHeight + "px";
+                                    children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - NavTabs.offsetHeight + "px";
                                 })
                             }
 
@@ -82,25 +82,27 @@ class ServiceProvider extends BaseServiceProvider
 
                         // 表格父容器
                         const DcatBox = document.querySelector(".dcat-box")
-                        DcatBox.style.height = "100%";
-                        DcatBox.style.display = "flex";
-                        DcatBox.style.flexDirection = "column";
-                        Array.from(DcatBox.children).forEach(child => {
-                            if(!child.className.includes("modal")){
-                                // 检查子元素及其后代是否包含表格
-                                if(child.className.includes("table-wrapper")) {
-                                    child.style.flex = "1";
-                                    child.style.overflowY = "auto";
-                                }else{
-                                    if(!child.className.includes("hidden")){
-                                        // 添加flex约束
-                                        child.style.flex = "0 0 auto";
-                                        // 添加防止收缩的保险措施
-                                        child.style.flexShrink = "0";
+                        if(DcatBox){
+                            DcatBox.style.height = "100%";
+                            DcatBox.style.display = "flex";
+                            DcatBox.style.flexDirection = "column";
+                            Array.from(DcatBox.children).forEach(child => {
+                                if(!child.className.includes("modal")){
+                                    // 检查子元素及其后代是否包含表格
+                                    if(child.className.includes("table-wrapper")) {
+                                        child.style.flex = "1";
+                                        child.style.overflowY = "auto";
+                                    }else{
+                                        if(!child.className.includes("hidden")){
+                                            // 添加flex约束
+                                            child.style.flex = "0 0 auto";
+                                            // 添加防止收缩的保险措施
+                                            child.style.flexShrink = "0";
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 })();
                 ';
