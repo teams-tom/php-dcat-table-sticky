@@ -27,10 +27,9 @@ class ServiceProvider extends BaseServiceProvider
                 $script = '
                 ;(function() {
                     tableDom = document.querySelector("table");
+                    console.log(tableDom,1111);
                     if(tableDom){
                         // 禁止html根结点纵向滚动
-                  console.log(document.documentElement,1111);
-                  console.log(document.documentElement.style,2222);
                         document.documentElement.style.overflowY = "hidden"
                         // 禁止body纵向滚动
                         document.body.style.height = "100%"
@@ -42,28 +41,33 @@ class ServiceProvider extends BaseServiceProvider
                             HeaderNavbarHeight = HeaderNavbar.offsetHeight + 30 || 0
                         }
 
-                        // 修改根容器高度
-                        const ContentWrapper = document.querySelector(".content-wrapper")
-                        ContentWrapper.style.minHeight = "0";
-                        ContentWrapper.style.height = window.innerHeight - HeaderNavbarHeight + "px";
-                        ContentWrapper.style.paddingTop = "0";
-                        ContentWrapper.style.marginTop = HeaderNavbarHeight + "px";
-                        ContentWrapper.style.display = "flex";
-                        ContentWrapper.style.flexDirection = "column";
+
 
                         // 获取根容器头部属性
-                        const ContentHeader = document.querySelector(".content-wrapper .content-header")
+                        const ContentHeader = document.querySelector(".content-header")
                         let ContentHeaderHeight = 0
                         if(ContentHeader){
                             ContentHeader.style.flex = "0 0 auto";
-                            ContentHeaderHeight = ContentHeader.offsetHeight || 0
+                            ContentHeaderHeight = ContentHeader.offsetHeight || 0;
+
+                            // 获取直接父元素
+                            const ContentWrapper = ContentHeader.parentElement;
+                            console.log( "父元素：", ContentWrapper);
+                            // 修改根容器高度
+                            ContentWrapper.style.minHeight = "0";
+                            ContentWrapper.style.height = window.innerHeight - HeaderNavbarHeight + "px";
+                            ContentWrapper.style.paddingTop = "0";
+                            ContentWrapper.style.marginTop = HeaderNavbarHeight + "px";
+                            ContentWrapper.style.display = "flex";
+                            ContentWrapper.style.flexDirection = "column";
                         }
 
+
                         // 修改根容器body高度
-                        const ContentBody = document.querySelector(".content-wrapper .content-body")
+                        const ContentBody = document.querySelector(".content-body")
                         ContentBody.style.flex = "1";
 
-                        const ContentBodyRow = document.querySelector(".content-wrapper .content-body .row")
+                        const ContentBodyRow = document.querySelector(".content-body .row")
                         ContentBodyRow.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight + "px";
 
                         // 表格父容器
