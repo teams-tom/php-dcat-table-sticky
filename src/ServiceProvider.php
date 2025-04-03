@@ -134,11 +134,18 @@ class ServiceProvider extends BaseServiceProvider
                             if(HeaderNavbar){
                                 HeaderNavbarHeight = HeaderNavbar.offsetHeight + 30 || 0;
                                 // 修复顶部header中的icon在部分屏幕会竖向布局
-                                const HeaderNavbarRightNav = document.querySelector(".header-navbar .navbar-right .navbar-nav");
+                                const HeaderNavbarRightNav = HeaderNavbar.querySelector(".navbar-right .navbar-nav");
                                 HeaderNavbarRightNav.style.flexDirection = "row";
                                 const HeaderNavbarRightNavMenu = HeaderNavbarRightNav.querySelector(".dropdown-menu");
                                 HeaderNavbarRightNavMenu.style.position = "absolute"
                                 HeaderNavbarRightNavMenu.style.top = HeaderNavbar.offsetHeight + "px"
+                            }
+
+                            // 获取面包屑属性
+                            const IframeTabContainer = document.querySelector(".iframe-tab-container");
+                            let IframeTabContainerHeight = 0;
+                            if(IframeTabContainer){
+                                IframeTabContainerHeight = IframeTabContainer.offsetHeight + 20 || 0;
                             }
 
                             // 获取根容器头部属性
@@ -152,9 +159,9 @@ class ServiceProvider extends BaseServiceProvider
                                 const ContentWrapper = ContentHeader.parentElement;
                                 // 修改根容器高度
                                 ContentWrapper.style.minHeight = "0";
-                                ContentWrapper.style.height = window.innerHeight - HeaderNavbarHeight + "px";
+                                ContentWrapper.style.height = window.innerHeight - HeaderNavbarHeight - IframeTabContainerHeight + "px";
                                 ContentWrapper.style.paddingTop = "0";
-                                ContentWrapper.style.marginTop = HeaderNavbarHeight + "px";
+                                ContentWrapper.style.marginTop = HeaderNavbarHeight + IframeTabContainerHeight + "px";
                                 ContentWrapper.style.display = "flex";
                                 ContentWrapper.style.flexDirection = "column";
                             }
@@ -165,13 +172,13 @@ class ServiceProvider extends BaseServiceProvider
 
                             const ContentBodyRow = document.querySelectorAll(".content-body .row");
                             Array.from(ContentBodyRow).forEach(child => {
-                                child.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight + "px";
+                                child.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - IframeTabContainerHeight + "px";
                                 // 处理表格上有nav的情况
                                 const NavTabs = document.querySelector(".nav-tabs");
                                 if(NavTabs){
                                     Array.from(child.children).forEach(children => {
                                         // 修改容器高度
-                                        children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - NavTabs.offsetHeight -20 + "px";
+                                        children.style.height = window.innerHeight - HeaderNavbarHeight - ContentHeaderHeight - IframeTabContainerHeight - NavTabs.offsetHeight -20 + "px";
                                     });
                                 };
                             });
