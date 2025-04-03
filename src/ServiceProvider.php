@@ -134,13 +134,18 @@ class ServiceProvider extends BaseServiceProvider
                             if(HeaderNavbar){
                                 HeaderNavbarHeight = HeaderNavbar.offsetHeight + 30 || 0;
                                 // 修复顶部header中的icon在部分屏幕会竖向布局
-                                const HeaderNavbarRightNav = HeaderNavbar.querySelector(".navbar-right .navbar-nav");
-                                HeaderNavbarRightNav.style.flexDirection = "row";
-                                const HeaderNavbarRightNavMenu = HeaderNavbarRightNav.querySelector(".dropdown-menu");
-                                HeaderNavbarRightNavMenu.style.position = "absolute"
-                                HeaderNavbarRightNavMenu.style.top = HeaderNavbar.offsetHeight + "px"
+                                const HeaderNavbarRight = HeaderNavbar.querySelector(".navbar-right");
+                                if(HeaderNavbarRight?.children?.length){
+                                    Array.from(HeaderNavbarRight.children).forEach(HeaderNavbarRightNav => {
+                                        HeaderNavbarRightNav.style.flexDirection = "row";
+                                        const HeaderNavbarRightNavMenu = HeaderNavbarRightNav.querySelector(".dropdown-menu");
+                                        if(HeaderNavbarRightNavMenu){
+                                            HeaderNavbarRightNavMenu.style.position = "absolute"
+                                            HeaderNavbarRightNavMenu.style.top = HeaderNavbar.offsetHeight + "px"
+                                        }
+                                    })
+                                }
                             }
-
                             // 获取面包屑属性
                             const IframeTabContainer = document.querySelector(".iframe-tab-container");
                             let IframeTabContainerHeight = 0;
