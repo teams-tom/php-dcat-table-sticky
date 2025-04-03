@@ -98,9 +98,9 @@ class ServiceProvider extends BaseServiceProvider
                                     };
 
                                     // 固定首列
-                                    // if(this.Config("first")){
-                                    //     this.StickyHeader();
-                                    // };
+                                    if(this.Config("first")){
+                                        this.StickyFirst();
+                                    };
 
                                     // 固定尾列
                                     if(this.Config("last")){
@@ -237,24 +237,59 @@ class ServiceProvider extends BaseServiceProvider
 
                         // 首列固定
                         StickyFirst(){
+                            this.scrollElementX = this.scrollElementX ? this.scrollElementX : document.querySelector(".dcat-box .table-wrapper")
+                            if(this.scrollElementX){
+                                this.theadElement = this.theadElement ? this.theadElement : document.getElementsByTagName("thead")[0];
+                                this.thElement = this.thElement ? this.thElement : this.theadElement.querySelectorAll("th");
+                                if(this.scrollElementX.scrollLeft > 0){
+                                    if(this.theadElement){
+                                        this.SetStickyTheadFirstStyle(this.thElement, true)
+                                    }
 
+                                    this.tbodyElement = this.tbodyElement ? this.tbodyElement : document.getElementsByTagName("tbody")[0]
+                                    if(this.tbodyElement){
+                                        this.tbodyElementModifyStyle((tr) => {
+                                            this.SetStickyTheadFirstStyle(tr.children, true)
+                                        })
+                                    }
+                                }
+                                const handleScroll = (e) => {
+                                    const scrollData = e.target
+
+                                    if(scrollData.scrollLeft === 0){
+                                        this.SetStickyTheadFirstStyle(this.thElement, false)
+                                        this.tbodyElement = this.tbodyElement ? this.tbodyElement : document.getElementsByTagName("tbody")[0]
+                                        if(this.tbodyElement){
+                                            this.tbodyElementModifyStyle((tr) => {
+                                                this.SetStickyTheadFirstStyle(tr.children, false)
+                                            })
+                                        }
+                                    }else{
+                                        this.SetStickyTheadFirstStyle(this.thElement, true)
+                                        this.tbodyElement = this.tbodyElement ? this.tbodyElement : document.getElementsByTagName("tbody")[0]
+                                        if(this.tbodyElement){
+                                            this.tbodyElementModifyStyle((tr) => {
+                                                this.SetStickyTheadFirstStyle(tr.children, true)
+                                            })
+                                        }
+                                    }
+                                };
+
+                                // 监听&&移除监听
+                                this.ElementEventListenerX(handleScroll);
+                            }
                         }
                         // 尾列固定
                         StickyLast(){
-                            this.scrollElementX = document.querySelector(".dcat-box .table-wrapper")
+                            this.scrollElementX = this.scrollElementX ? this.scrollElementX : document.querySelector(".dcat-box .table-wrapper")
                             if(this.scrollElementX){
                                 let lastThElement = null
                                 if(this.scrollElementX.offsetWidth < this.scrollElementX.scrollWidth){
                                     this.theadElement = this.theadElement ? this.theadElement : document.getElementsByTagName("thead")[0]
                                     if(this.theadElement){
-                                        this.thElement = this.thElement ? this.thElement : document.querySelectorAll("th")
+                                        this.thElement = this.thElement ? this.thElement : this.theadElement.querySelectorAll("th")
                                         lastThElement = this.thElement[this.thElement.length - 1]
                                         this.SetStickyTheadLastStyle(lastThElement, true)
-                                        lastThElement.style.position = "sticky";
-                                        lastThElement.style.right = "0";
-                                        lastThElement.style.zIndex = "999";
-                                        lastThElement.style.boxShadow = "rgba(0, 0, 0, 0.12) -10px 0px 10px 0px";
-                                        lastThElement.style.background = "#fff";
                                     }
 
                                     this.tbodyElement = this.tbodyElement ? this.tbodyElement : document.getElementsByTagName("tbody")[0]
@@ -307,9 +342,38 @@ class ServiceProvider extends BaseServiceProvider
                             }
                         }
 
+                        // 设置首列固定表头样式
+                        SetStickyTheadFirstStyle(thElement, flag){
+                            const setStyle = (Element) => {
+                                Element.style.position = flag ? "sticky" : "unset";
+                                Element.style.zIndex = "999";
+                                Element.style.left = "0";
+                                Element.style.background = flag ? "#fff" : "unset";
+                            }
+                            const checkBox = thElement[0].querySelector("input");
+                            if(checkBox?.type === "checkbox"){
+                                [0, 1].forEach(item => {
+                                    setStyle(thElement[item])
+                                    if(item == 1){
+                                        thElement[item].style.left = thElement[0].offsetWidth + "px";
+                                        thElement[item].style.boxShadow = flag ? "rgba(0, 0, 0, 0.12) 10px 2px 10px -5px" : "unset";
+                                    }
+                                })
+                            }else{
+                                setStyle(this.thElement[0])
+                                thElement[0].style.boxShadow = flag ? "rgba(0, 0, 0, 0.12) 10px 2px 10px -5px" : "unset";
+                            }
+                        }
+
+                        SetStickyTbodyFirstStyle(flag=true){
+
+                        }
+
                         // 设置尾列固定表头样式
-                        SetStickyTheadLastStyle(Element, flag=true){
+                        SetStickyTheadLastStyle(Element, flag){
                             Element.style.position = flag ? "sticky" : "unset";
+                            Element.style.zIndex = "999";
+                            Element.style.right = "0";
                             Element.style.boxShadow = flag ? "rgba(0, 0, 0, 0.12) -10px 0px 10px 0px" : "unset";
                             Element.style.background = flag ? "#fff" : "unset";
                         }
@@ -361,6 +425,15 @@ class ServiceProvider extends BaseServiceProvider
                                     td.style.borderBottom = "1px solid #ebeef5"
                                 })
                             })
+
+                            // this.theadElement = this.theadElement ? this.theadElement : document.getElementsByTagName("thead")[0]
+                            // if(this.theadElement){
+                            //     this.thElement = this.thElement ? this.thElement : this.theadElement.querySelectorAll("th")
+                            //     Array.from(this.thElement).forEach((th, index) => {
+                            //        th.style.borderRight = "1px solid #000"
+                            //        th.style.borderBottom = "1px solid #000"
+                            //     })
+                            // }
                         }
 
                         tbodyElementModifyStyle(callback){
@@ -378,10 +451,7 @@ class ServiceProvider extends BaseServiceProvider
 
                         ElementEventListenerX(callback){
                             // 移除旧的事件监听器
-                            this.scrollElementX.removeEventListener("scroll", (e) => {
-                                callback(e)
-                                this.theadElement = null
-                            });
+                            this.scrollElementX.removeEventListener("scroll", callback);
                             // 添加新的事件监听器
                             this.scrollElementX.addEventListener("scroll", callback);
                         }
