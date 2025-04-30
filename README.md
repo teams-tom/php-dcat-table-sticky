@@ -42,6 +42,10 @@
 
 ```cmd
 composer require teamstom/table-sticky
+
+或
+
+composer require teamstom/table-sticky:dev-main
 ```
 
 ### 安装扩展
